@@ -100,6 +100,10 @@ export const CustomerServiceModal: React.FC<CustomerServiceModalProps> = ({
           }),
         });
 
+        if (!res.ok) {
+          throw new Error('Static hosting fallback');
+        }
+
         const data = await res.json();
         sound.playNotification();
 
@@ -114,12 +118,29 @@ export const CustomerServiceModal: React.FC<CustomerServiceModalProps> = ({
           },
         ]);
       } catch (err) {
+        // Smart contextual fallback for static deployment (GitHub Pages)
+        let reply = 'Halo Kak! NusaBot siap membantu Anda di NusantaraMart. Silakan tanyakan seputar promo gratis ongkir, pelacakan rute kurir di peta langsung, atau penukaran poin loyalitas belanja!';
+        const lower = query.toLowerCase();
+
+        if (lower.includes('kopi') || lower.includes('gayo')) {
+          reply = 'Untuk pencinta kopi, rekomendasi terbaik kami adalah "Kopi Arabika Gayo Single Origin 250g" (Rp 85.000). Freshly roasted dengan aroma karamel cokelat yang lembut dan aman di lambung!';
+        } else if (lower.includes('lacak') || lower.includes('posisi') || lower.includes('kurir') || lower.includes('resi')) {
+          reply = 'Kakak bisa memantau posisi kurir secara langsung dengan klik menu "Lacak Pengiriman Langsung" di bagian atas. Peta radar GPS akan menampilkan pergerakan kurir dan estimasi waktu tiba (ETA) secara real-time!';
+        } else if (lower.includes('poin') || lower.includes('loyalitas') || lower.includes('member')) {
+          reply = 'Di NusantaraMart, setiap transaksi memberikan cashback 1% - 3% poin sesuai membership tier (Silver, Gold, Platinum). 1 Poin bernilai Rp 1 yang bisa langsung dipotongkan saat checkout belanja!';
+        } else if (lower.includes('bayar') || lower.includes('pembayaran') || lower.includes('qris')) {
+          reply = 'NusantaraMart mendukung pembayaran E-Wallet (GoPay, OVO, DANA, ShopeePay), Transfer Bank Lokal & Virtual Account (BCA, Mandiri, BRI, BNI), QRIS instan bebas admin, Kartu Kredit (SSL 256-bit), serta Bayar di Tempat (COD).';
+        } else if (lower.includes('voucher') || lower.includes('promo') || lower.includes('diskon')) {
+          reply = 'Gunakan kode voucher "NUSANTARAHEBAT" untuk diskon Rp 25.000 atau "GRATISONGKIR" untuk bebas biaya kirim se-Indonesia di halaman keranjang belanja!';
+        }
+
+        sound.playNotification();
         setAiMessages((prev) => [
           ...prev,
           {
             id: `ai-${Date.now()}`,
             sender: 'ai',
-            text: 'Halo Kak, ada yang bisa saya bantu seputar pencarian produk, promo gratis ongkir, atau info pelacakan rute pengiriman kami?',
+            text: reply,
             timestamp: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }),
           },
         ]);

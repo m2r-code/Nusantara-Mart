@@ -62,7 +62,10 @@ export const UserAnalyticsModal: React.FC<UserAnalyticsModalProps> = ({
           budget: 'Rp 200.000 - Rp 600.000',
         }),
       })
-        .then((res) => res.json())
+        .then((res) => {
+          if (!res.ok) throw new Error('Static fallback');
+          return res.json();
+        })
         .then((data) => {
           setAiInsight(data.insight);
           setLoadingAi(false);
