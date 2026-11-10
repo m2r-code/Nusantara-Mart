@@ -1,0 +1,6 @@
+{
+  "name": "NusantaraMart - Belanja Online & Pelacakan Real-Time",
+  "description": "Platform e-commerce modern Indonesia dengan pelacakan pengiriman kurir peta interaktif langsung, asisten belanja AI 24/7, program loyalitas poin, dan dasbor analitik bisnis komprehensif.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
